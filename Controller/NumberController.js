@@ -58,18 +58,3 @@ class NumberController {
 }
 
 module.exports = NumberController;
-
-const test = new NumberController();
-console.log(test.getNumbers())
-
-const numbers = test.getNumbers()
-
-test.getNumberForRecipients('+61413015555','+n', (number) => {
-  console.log("Available Number: ",number)
-})
-
-
-
-// TODO: Get messages for last 7 days,
-//       check if number can be used by recipients
-//       return number to use for recipients

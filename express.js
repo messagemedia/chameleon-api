@@ -6,11 +6,11 @@ const port = process.env.PORT
 const sdk = require('messagemedia-messages-sdk');
 const controller = sdk.MessagesController;
 
-const TemplateController = require('./MessageTemplateController');
+const TemplateController = require('./Controller/MessageTemplateController');
 const Recipient = require('./Model/Recipient');
 const templates = new TemplateController();
 
-const NumberController = require('./NumberController');
+const NumberController = require('./Controller/NumberController');
 const number_controller = new NumberController();
 
 var bodyParser = require('body-parser')

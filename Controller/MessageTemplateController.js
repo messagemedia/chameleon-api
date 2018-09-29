@@ -1,5 +1,5 @@
 require('dotenv').config()
-const Recipient = require('./Model/Recipient');
+const Recipient = require('../Model/Recipient');
 
 class MessageTemplateController {
 
