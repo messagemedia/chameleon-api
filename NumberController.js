@@ -5,31 +5,23 @@ const moment = require('moment');
 
 class NumberController {
 
-  async getNumberForRecipients(recipient1, recipient2, callback) {
+  async getNumberForRecipients(number1, number2, callback) {
     const numbers = this.getNumbers()
-    const availableNumbers = []
 
-    for (var i = 0; i < numbers.length; i++) {
-      const number = numbers[i]
+    for (const number of numbers) {
       this.getRecipientsFor(number, (numbers) => {
-        console.log("test for number: ",number)
-        console.log(numbers)
-        if(!numbers.includes('+61413015555')) {
-          availableNumbers.push(number)
+        if(!numbers.includes(number1) && !numbers.includes(number2)) {
           callback(number)
-          return 0
         }
       })
-
-
     }
 
   }
 
   getRecipientsFor(number, callback) {
     const dateFormat = 'YYYY-MM-DDThh:mm:ss'
-    const start_date = moment().utc().subtract(7, "days").format(dateFormat)
-    const end_date = moment().utc().format(dateFormat)
+    const start_date = moment().subtract(1, "days").format(dateFormat)
+    const end_date = moment().add(1, "days").format(dateFormat)
 
     const mm_url = "https://"+process.env.MM_API_API_KEY+":"+process.env.MM_API_SECRET_KEY+
     "@api.messagemedia.com/v1/reporting/sent_messages/detail?" +
@@ -46,7 +38,12 @@ class NumberController {
         const messages = JSON.parse(response.body).data
         const arr = [];
         messages.forEach((message) => {
-          arr.push(message.destination_address)
+          const conversation_ended = message.metadata.end_time < Date.now() ? true : false
+          if(!conversation_ended) {
+            arr.push(message.destination_address)
+            // console.log("Ongoing Conversation: ", message)
+            console.log("Conversation Ends in: "+message.metadata.end_date-Date.now())
+          }
         })
         callback(arr)
     });
@@ -67,7 +64,7 @@ console.log(test.getNumbers())
 
 const numbers = test.getNumbers()
 
-test.getNumberForRecipients('+61413015555','+somenumber', (number) => {
+test.getNumberForRecipients('+61413015555','+n', (number) => {
   console.log("Available Number: ",number)
 })
 

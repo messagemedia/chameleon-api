@@ -8,7 +8,10 @@ const controller = sdk.MessagesController;
 
 const TemplateController = require('./MessageTemplateController');
 const Recipient = require('./Model/Recipient');
-const templates = new TemplateController()
+const templates = new TemplateController();
+
+const NumberController = require('./NumberController');
+const number_controller = new NumberController();
 
 var bodyParser = require('body-parser')
 
@@ -23,23 +26,35 @@ app.use(bodyParser.json())
 app.post('/chameleon', (req, res) => {
   res.send(req.body)
   const conversations = req.body.conversations
-  const line = "+61436368717"
-
 
   conversations.forEach((conversation) => {
     const recipients = conversation.recipients
     const recipient1 = new Recipient(recipients[0].name, recipients[0].number)
     const recipient2 = new Recipient(recipients[1].name, recipients[1].number)
 
-    const initialMessage01 = templates.initialMessage(line, recipient1, recipient2, recipients[0].initial_message, conversation.expiry)
-    const initialMessage02 = templates.initialMessage(line, recipient2, recipient1, recipients[1].initial_message, conversation.expiry)
-    const messages = [initialMessage01, initialMessage02]
-    
-    const body = new sdk.SendMessagesRequest({messages:messages})
-    console.log(body)
-    controller.createSendMessages(body, function(error, response, context) {
-      console.log(response);
-    });
+    var foundNumber = false
+
+    number_controller.getNumberForRecipients(recipient1.number, recipient2.number, (number) => {
+      if(!foundNumber) {
+        console.log("Available Line: ",number)
+        const line = number
+
+        const initialMessage01 = templates.initialMessage(line, recipient1, recipient2, recipients[0].initial_message, conversation.expiry)
+        const initialMessage02 = templates.initialMessage(line, recipient2, recipient1, recipients[1].initial_message, conversation.expiry)
+        const messages = [initialMessage01, initialMessage02]
+
+        const body = new sdk.SendMessagesRequest({messages:messages})
+        console.log(body)
+        console.log(initialMessage01.metadata)
+        console.log(initialMessage02.metadata)
+
+        controller.createSendMessages(body, function(error, response, context) {
+          console.log(response);
+        });
+      }
+      foundNumber = true
+    })
+
 
 
   })
@@ -77,6 +92,7 @@ app.post('/incoming', (req, res) => {
         "messages":[
           {
             "content":reply,
+            "source_number":lineNumber,
             "destination_number":recipient,
             "metadata": {
               "recipient":replyTo,
@@ -91,20 +107,13 @@ app.post('/incoming', (req, res) => {
         ]
       });
 
-      console.log("Conversation is still current, sending the reply.")
     } else {
+      console.log("Conversation has ended. Sending ended reply.")
+
       body = new sdk.SendMessagesRequest({
-        "messages":[
-          {
-            "content":"This conversation has already ended. Sorry :/",
-            "destination_number":req.body.source_number,
-            "metadata": {
-              "end_time":req.body.metadata.end_time
-            }
-          }
-        ]
+        "messages":[templates.endedMessage(req.body.metadata.line, req.body.source_number)]
       });
-      console.log("Conversation has ended. Sending error reply.")
+
     }
 
     controller.createSendMessages(body, function(error, response, context) {

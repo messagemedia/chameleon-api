@@ -21,13 +21,12 @@ class MessageTemplateController {
     return message_obj
   }
 
-  endedMessage(sender, end_time) {
+  endedMessage(line, sender, end_time) {
     const message_obj = {
       "content":"This conversation has already ended. Your reply was not sent.",
+      "source_number":line,
       "destination_number":sender,
-      "metadata": {
-        "end_time":end_time
-      }
+      "metadata": {}
     }
     return message_obj
   }
