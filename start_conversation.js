@@ -10,13 +10,14 @@ sdk.Configuration.basicAuthPassword = process.env.MM_API_SECRET_KEY; // Your Sec
 
 const end_time = Date.now() + 60000
 
+
 var body = new sdk.SendMessagesRequest({
    "messages":[
       {
          "content":"Your SkyBNB host, Ibrahim, can be contacted by replying to this number. Please do not share private information using this chat.",
          "destination_number":"+61413015555",
          "metadata": {
-           "recipient":"+61451325027",
+           "recipient":"+61413015555",
            "line":"‭+61439843333‬",
            "name":"James",
            "recipient_name":"Ibrahim",
@@ -27,7 +28,7 @@ var body = new sdk.SendMessagesRequest({
       },
       {
          "content":"Your SkyBNB guest, James, can be contacted by replying to this number. Please do not share private information using this chat.",
-         "destination_number":"+61451325027",
+         "destination_number":"+61413015555",
          "metadata": {
            "recipient":"+61413015555",
            "line":"‭+61439843333‬",
@@ -40,7 +41,6 @@ var body = new sdk.SendMessagesRequest({
       }
    ]
 });
-
 controller.createSendMessages(body, function(error, response, context) {
   console.log(response);
 });

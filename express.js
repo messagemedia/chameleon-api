@@ -6,17 +6,51 @@ const port = process.env.PORT
 const sdk = require('messagemedia-messages-sdk');
 const controller = sdk.MessagesController;
 
+const TemplateController = require('./MessageTemplateController');
+const Recipient = require('./Model/Recipient');
+const templates = new TemplateController()
+
+var bodyParser = require('body-parser')
 
 // Configuration parameters and credentials
 sdk.Configuration.basicAuthUserName = process.env.MM_API_API_KEY; // Your API Key
 sdk.Configuration.basicAuthPassword = process.env.MM_API_SECRET_KEY; // Your Secret Key
 
 
-var bodyParser = require('body-parser')
 app.use(bodyParser.json())
 
 
-app.post('/', (req, res) => {
+app.post('/chameleon', (req, res) => {
+  res.send(req.body)
+  const conversations = req.body.conversations
+  const line = "+61436368717"
+
+
+  conversations.forEach((conversation) => {
+    const recipients = conversation.recipients
+    const recipient1 = new Recipient(recipients[0].name, recipients[0].number)
+    const recipient2 = new Recipient(recipients[1].name, recipients[1].number)
+
+    const initialMessage01 = templates.initialMessage(line, recipient1, recipient2, recipients[0].initial_message, conversation.expiry)
+    const initialMessage02 = templates.initialMessage(line, recipient2, recipient1, recipients[1].initial_message, conversation.expiry)
+    const messages = [initialMessage01, initialMessage02]
+    
+    const body = new sdk.SendMessagesRequest({messages:messages})
+    console.log(body)
+    controller.createSendMessages(body, function(error, response, context) {
+      console.log(response);
+    });
+
+
+  })
+})
+
+
+
+
+
+
+app.post('/incoming', (req, res) => {
   console.log(req.body.test)
   res.send('success')
 

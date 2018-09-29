@@ -1,35 +1,56 @@
 require('dotenv').config()
-var request = require('request');
+const request = require('request');
+const querystring = require('querystring');
+const moment = require('moment');
 
 class NumberController {
 
-  getNumberForRecipients(recipient1, recipient2) {
+  async getNumberForRecipients(recipient1, recipient2, callback) {
+    const numbers = this.getNumbers()
+    const availableNumbers = []
+
+    for (var i = 0; i < numbers.length; i++) {
+      const number = numbers[i]
+      this.getRecipientsFor(number, (numbers) => {
+        console.log("test for number: ",number)
+        console.log(numbers)
+        if(!numbers.includes('+61413015555')) {
+          availableNumbers.push(number)
+          callback(number)
+          return 0
+        }
+      })
+
+
+    }
 
   }
 
   getRecipientsFor(number, callback) {
+    const dateFormat = 'YYYY-MM-DDThh:mm:ss'
+    const start_date = moment().utc().subtract(7, "days").format(dateFormat)
+    const end_date = moment().utc().format(dateFormat)
+
     const mm_url = "https://"+process.env.MM_API_API_KEY+":"+process.env.MM_API_SECRET_KEY+
     "@api.messagemedia.com/v1/reporting/sent_messages/detail?" +
     "metadata_key=type"+
     "&metadata_value=initial"+
-    "&start_date=2018-09-20T13:30:00"+
-    "&end_date=2018-09-26T13:30:00"+
-    "&source_address=%2B61436368717"
-    console.log(mm_url)
+    "&start_date="+start_date+
+    "&end_date="+end_date+
+    "&source_address="+querystring.escape(number)
+
     request({
         url: mm_url,
         method: "GET"
-    }, function (error, response, body){
-        const initialMessages = JSON.parse(response.body).data
+    }, (error, response, body) => {
+        const messages = JSON.parse(response.body).data
         const arr = [];
-        for (var i = 0; i < initialMessages.length; i++) {
-          const message = initialMessages[i]
+        messages.forEach((message) => {
           arr.push(message.destination_address)
-        }
+        })
         callback(arr)
     });
   }
-
 
 
   getNumbers() {
@@ -43,9 +64,13 @@ module.exports = NumberController;
 
 const test = new NumberController();
 console.log(test.getNumbers())
-test.getRecipientsFor("+61413015555", (numbers) => {
-  console.log(numbers)
+
+const numbers = test.getNumbers()
+
+test.getNumberForRecipients('+61413015555','+somenumber', (number) => {
+  console.log("Available Number: ",number)
 })
+
 
 
 // TODO: Get messages for last 7 days,
