@@ -5,7 +5,7 @@ const moment = require('moment');
 
 class NumberController {
 
-  async getNumberForRecipients(number1, number2, callback) {
+  getNumberForRecipients(number1, number2, callback) {
     const numbers = this.getNumbers()
 
     for (const number of numbers) {
@@ -41,7 +41,6 @@ class NumberController {
           const conversation_ended = message.metadata.end_time < Date.now() ? true : false
           if(!conversation_ended) {
             arr.push(message.destination_address)
-            // console.log("Ongoing Conversation: ", message)
             console.log("Conversation Ends in: "+message.metadata.end_date-Date.now())
           }
         })

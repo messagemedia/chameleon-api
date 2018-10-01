@@ -1,25 +1,22 @@
 require('dotenv').config()
 const express = require('express')
-const app = express()
-const port = process.env.PORT
-
-const sdk = require('messagemedia-messages-sdk');
-const controller = sdk.MessagesController;
-
+const bodyParser = require('body-parser')
+const NumberController = require('./Controller/NumberController');
 const TemplateController = require('./Controller/MessageTemplateController');
 const Recipient = require('./Model/Recipient');
-const templates = new TemplateController();
+const sdk = require('messagemedia-messages-sdk');
 
-const NumberController = require('./Controller/NumberController');
+const controller = sdk.MessagesController;
+const templates = new TemplateController();
 const number_controller = new NumberController();
 
-var bodyParser = require('body-parser')
-
-// Configuration parameters and credentials
+// MessageMedia Messages SDK Configuration
 sdk.Configuration.basicAuthUserName = process.env.MM_API_API_KEY; // Your API Key
 sdk.Configuration.basicAuthPassword = process.env.MM_API_SECRET_KEY; // Your Secret Key
 
 
+const port = process.env.PORT
+const app = express()
 app.use(bodyParser.json())
 
 
