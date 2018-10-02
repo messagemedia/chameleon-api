@@ -31,23 +31,21 @@ app.post('/chameleon', (req, res) => {
     const recipient1 = new Recipient(recipients[0].name, recipients[0].number)
     const recipient2 = new Recipient(recipients[1].name, recipients[1].number)
 
-    var foundNumber = false
+    number_controller.getAvailableLineForNumbers([recipient1.number, recipient2.number], (numbers) => {
+        const number = numbers[0]
+        if(typeof number != 'undefined') {
+          const line = number
 
-    number_controller.getNumberForRecipients(recipient1.number, recipient2.number, (number) => {
-      if(!foundNumber) {
-        const line = number
+          const initialMessage01 = templates.initialMessage(line, recipient1, recipient2, recipients[0].initial_message, conversation.expiry)
+          const initialMessage02 = templates.initialMessage(line, recipient2, recipient1, recipients[1].initial_message, conversation.expiry)
+          const messages = [initialMessage01, initialMessage02]
 
-        const initialMessage01 = templates.initialMessage(line, recipient1, recipient2, recipients[0].initial_message, conversation.expiry)
-        const initialMessage02 = templates.initialMessage(line, recipient2, recipient1, recipients[1].initial_message, conversation.expiry)
-        const messages = [initialMessage01, initialMessage02]
+          const body = new sdk.SendMessagesRequest({messages:messages})
 
-        const body = new sdk.SendMessagesRequest({messages:messages})
-
-        messages_controller.createSendMessages(body, function(error, response, context) {
-          console.log(response);
-        });
-      }
-      foundNumber = true
+          messages_controller.createSendMessages(body, function(error, response, context) {
+            console.log(response);
+          });
+        }
     })
 
 
@@ -100,7 +98,7 @@ app.post('/incoming', (req, res) => {
       const recipient_number = req.body.metadata.recipient
       const recipient = new Recipient(recipient_name, recipient_number)
 
-      const reply = "["+sender_name+"] "+req.body.content
+      const reply = req.body.content
       const end_time = req.body.metadata.end_time
 
       const body = new sdk.SendMessagesRequest(
