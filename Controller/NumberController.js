@@ -33,7 +33,7 @@ class NumberController {
 
         const conversation = {
           number: message.destination_address,
-          end_time: message.metadata.end_time,
+          expiry: message.metadata.expiry,
           recipient: message.metadata.recipient
         }
         conversations[message.source_address].push(conversation)
@@ -50,7 +50,7 @@ class NumberController {
       const numbers = Object.keys(conversationNumberSet)
       for (var number of numbers) {
         const conversations = conversationNumberSet[number]
-        const filtered_by_active = conversations.filter(conversation => conversation.end_time > Date.now())
+        const filtered_by_active = conversations.filter(conversation => conversation.expiry > Date.now())
         activeConversations[number] = filtered_by_active
       }
       callback(activeConversations)
@@ -63,7 +63,7 @@ class NumberController {
       for (var number in activeConversations) {
         for (var conversation of activeConversations[number]) {
           for (var recipient of recipients) {
-            if(conversation.recipient == recipient && conversation.end_time > Date.now()) {
+            if(conversation.recipient == recipient && conversation.expiry > Date.now()) {
               const index = lines.indexOf(number)
               if (index > -1) {
                 lines.splice(index, 1)

@@ -16,7 +16,8 @@
     "messagemedia-messages-sdk": "^1.0.3",
     "messagemedia-signingkeys-sdk": "^1.2.0",
     "moment": "^2.22.2",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "mocha": "^5.2.0"
