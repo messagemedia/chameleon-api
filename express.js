@@ -1,12 +1,13 @@
 require('dotenv').config()
 const express = require('express')
+const crypto = require('crypto')
 const bodyParser = require('body-parser')
 const NumberController = require('./Controller/NumberController');
 const TemplateController = require('./Controller/MessageTemplateController');
 const Recipient = require('./Model/Recipient');
 const sdk = require('messagemedia-messages-sdk');
 
-const controller = sdk.MessagesController;
+const messages_controller = sdk.MessagesController;
 const templates = new TemplateController();
 const number_controller = new NumberController();
 
@@ -17,6 +18,7 @@ sdk.Configuration.basicAuthPassword = process.env.MM_API_SECRET_KEY; // Your Sec
 
 const port = process.env.PORT
 const app = express()
+var router = express.Router()
 app.use(bodyParser.json())
 
 
@@ -33,7 +35,6 @@ app.post('/chameleon', (req, res) => {
 
     number_controller.getNumberForRecipients(recipient1.number, recipient2.number, (number) => {
       if(!foundNumber) {
-        console.log("Available Line: ",number)
         const line = number
 
         const initialMessage01 = templates.initialMessage(line, recipient1, recipient2, recipients[0].initial_message, conversation.expiry)
@@ -41,11 +42,8 @@ app.post('/chameleon', (req, res) => {
         const messages = [initialMessage01, initialMessage02]
 
         const body = new sdk.SendMessagesRequest({messages:messages})
-        console.log(body)
-        console.log(initialMessage01.metadata)
-        console.log(initialMessage02.metadata)
 
-        controller.createSendMessages(body, function(error, response, context) {
+        messages_controller.createSendMessages(body, function(error, response, context) {
           console.log(response);
         });
       }
@@ -59,66 +57,74 @@ app.post('/chameleon', (req, res) => {
 
 
 
+//Enterprise Webhooks
+if(process.env.USE_ENTERPRISE_WEBHOOKS){
+  router.use('/incoming', function(req, res, next) {
+    var publicKey = '-----BEGIN PUBLIC KEY-----\n'+
+    process.env.ENTERPRISE_WEBHOOKS_KEY+'\n'+
+    '-----END PUBLIC KEY-----';
 
+    const body = JSON.stringify(req.body);
+    const signature = req.header('X-Messagemedia-Signature');
+    const digest = req.header('X-Messagemedia-Digest-Type');
+    const date = req.header('Date');
 
+    var verifier = crypto.createVerify(digest);
+    verifier.update("POST /incoming HTTP/1.1" + date + body);
+    const verified = verifier.verify(publicKey, signature, "base64");
+
+    if(verified){
+      next()
+    } else {
+      res.status(403)
+    }
+  });
+  app.use('/', router)
+}
 
 app.post('/incoming', (req, res) => {
-  console.log(req.body.test)
   res.send('success')
 
 
   if(typeof req.body.content != 'undefined') {
-    const conversation_ended = req.body.metadata.end_time < Date.now() ? true : false
-    console.log("Has the conversation ended? ", conversation_ended)
-    console.log("End Time: ", req.body.metadata.end_time)
-    console.log("Current Time: ", Date.now())
-
-
-    var body = ""
+    const conversation_ended = req.body.metadata.end_time < Date.now()
 
     if(!conversation_ended) {
-      const replyTo = req.body.source_number
-      const lineNumber = req.body.destination_number
-      const recipient = req.body.metadata.recipient
-      const name = req.body.metadata.name
-      const recipient_name = req.body.metadata.recipient_name
-      const end_time = req.body.metadata.end_time
-      const reply = "["+name+"] "+req.body.content
+      const line = req.body.destination_number
 
-      body = new sdk.SendMessagesRequest({
-        "messages":[
-          {
-            "content":reply,
-            "source_number":lineNumber,
-            "destination_number":recipient,
-            "metadata": {
-              "recipient":replyTo,
-              "line":lineNumber,
-              "name":recipient_name,
-              "recipient_name":name,
-              "end_time":end_time,
-              "type":"reply"
-            },
-            "callback_url":process.env.CALLBACK_URL
-          }
-        ]
+      const sender_name = req.body.metadata.name
+      const sender_number = req.body.source_number
+      const sender = new Recipient(sender_name, sender_number)
+
+      const recipient_name = req.body.metadata.recipient_name
+      const recipient_number = req.body.metadata.recipient
+      const recipient = new Recipient(recipient_name, recipient_number)
+
+      const reply = "["+sender_name+"] "+req.body.content
+      const end_time = req.body.metadata.end_time
+
+      const body = new sdk.SendMessagesRequest(
+        {"messages":[templates.replyMessage(reply, line, sender, recipient, end_time)]}
+      );
+
+      messages_controller.createSendMessages(body, function(error, response, context) {
+        console.log(response);
       });
 
     } else {
-      console.log("Conversation has ended. Sending ended reply.")
-
-      body = new sdk.SendMessagesRequest({
+      const body = new sdk.SendMessagesRequest({
         "messages":[templates.endedMessage(req.body.metadata.line, req.body.source_number)]
+      });
+
+      messages_controller.createSendMessages(body, function(error, response, context) {
+        console.log("Conversation has already ended. Sending already-ended conversation message.")
       });
 
     }
 
-    controller.createSendMessages(body, function(error, response, context) {
-      console.log(response);
-    });
   }
 
 
 })
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Chameleon listening on port ${port}!`))

@@ -16,7 +16,8 @@ class MessageTemplateController {
          "end_time":end_time,
          "type":"initial"
        },
-      "callback_url":process.env.CALLBACK_URL
+      "callback_url":process.env.CALLBACK_URL,
+      "delivery_report":false
     }
     return message_obj
   }
@@ -28,6 +29,25 @@ class MessageTemplateController {
       "destination_number":sender,
       "metadata": {}
     }
+    return message_obj
+  }
+
+  replyMessage(reply, line, sender, recipient, end_time) {
+    const message_obj = {
+          "content":reply,
+          "source_number":line,
+          "destination_number":recipient.number,
+          "metadata": {
+            "line":line,
+            "name":sender.name,
+            "recipient":recipient.name,
+            "recipient_name":recipient.name,
+            "end_time":end_time,
+            "type":"reply"
+          },
+          "callback_url":process.env.CALLBACK_URL,
+          "delivery_report":false
+        }
     return message_obj
   }
 
