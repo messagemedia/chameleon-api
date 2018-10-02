@@ -3,7 +3,7 @@ const Recipient = require('../Model/Recipient');
 
 class MessageTemplateController {
 
-  initialMessage(line, recipient1, recipient2, message, end_time) {
+  initialMessage(line, recipient1, recipient2, message, expiry) {
     return {
        "content":message,
        "source_number":line,
@@ -13,7 +13,7 @@ class MessageTemplateController {
          "line":line,
          "name":recipient1.name,
          "recipient_name":recipient2.name,
-         "end_time":end_time,
+         "expiry":expiry,
          "type":"initial"
        },
       "callback_url":process.env.CALLBACK_URL,
@@ -21,7 +21,7 @@ class MessageTemplateController {
     }
   }
 
-  endedMessage(line, sender, end_time) {
+  endedMessage(line, sender, expiry) {
      return {
       "content":"This conversation has already ended. Your reply was not sent.",
       "source_number":line,
@@ -30,7 +30,7 @@ class MessageTemplateController {
     }
   }
 
-  replyMessage(reply, line, sender, recipient, end_time) {
+  replyMessage(reply, line, sender, recipient, expiry) {
     return {
           "content":"["+sender.name+"] "+reply,
           "source_number":line,
@@ -40,7 +40,7 @@ class MessageTemplateController {
             "name":sender.name,
             "recipient":recipient.name,
             "recipient_name":recipient.name,
-            "end_time":end_time,
+            "expiry":expiry,
             "type":"reply"
           },
           "callback_url":process.env.CALLBACK_URL,

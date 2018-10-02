@@ -85,7 +85,7 @@ app.post('/incoming', (req, res) => {
 
 
   if(typeof req.body.content != 'undefined') {
-    const conversation_ended = req.body.metadata.end_time < Date.now()
+    const conversation_ended = req.body.metadata.expiry < Date.now()
 
     if(!conversation_ended) {
       const line = req.body.destination_number
@@ -99,10 +99,10 @@ app.post('/incoming', (req, res) => {
       const recipient = new Recipient(recipient_name, recipient_number)
 
       const reply = req.body.content
-      const end_time = req.body.metadata.end_time
+      const expiry = req.body.metadata.expiry
 
       const body = new sdk.SendMessagesRequest(
-        {"messages":[templates.replyMessage(reply, line, sender, recipient, end_time)]}
+        {"messages":[templates.replyMessage(reply, line, sender, recipient, expiry)]}
       );
 
       messages_controller.createSendMessages(body, function(error, response, context) {

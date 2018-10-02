@@ -30,8 +30,8 @@ describe('Number Controller', function() {
     });
 
     it('should return an array of available numbers for a pair', function(done) {
-      number_controller.getAvailableNumberForRecipients(['+61491570156','+61491570157'], numbers => {
-        expect(numbers).to.be.an('array');
+      number_controller.getAvailableLineForNumbers(['+61491570156','+61491570157'], lines => {
+        expect(lines).to.be.an('array');
         done()
       })
     });
