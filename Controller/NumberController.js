@@ -38,7 +38,7 @@ class NumberController {
         const messages = JSON.parse(response.body).data
         const arr = [];
         messages.forEach((message) => {
-          const conversation_ended = message.metadata.end_time < Date.now() ? true : false
+          const conversation_ended = message.metadata.end_time < Date.now()
           if(!conversation_ended) {
             arr.push(message.destination_address)
             console.log("Conversation Ends in: "+message.metadata.end_date-Date.now())
