@@ -62,7 +62,7 @@ class NumberController {
     this.getActiveConversations(activeConversations => {
       for (var number in activeConversations) {
         for (var conversation of activeConversations[number]) {
-          for (var recipient of recipients) {
+          for (var recipient of numbers) {
             if(conversation.recipient == recipient && conversation.expiry > Date.now()) {
               const index = lines.indexOf(number)
               if (index > -1) {
