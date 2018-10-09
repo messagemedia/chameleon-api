@@ -31,6 +31,7 @@ app.post('/chameleon', (req, res) => {
     const recipient1 = new Recipient(recipients[0].name, recipients[0].number)
     const recipient2 = new Recipient(recipients[1].name, recipients[1].number)
 
+    console.log("Recipients: ",recipient1,recipient2)
     number_controller.getAvailableLineForNumbers([recipient1.number, recipient2.number], (numbers) => {
         const number = numbers[0]
         if(typeof number != 'undefined') {
@@ -47,10 +48,8 @@ app.post('/chameleon', (req, res) => {
           });
         }
     })
-
-
-
   })
+
 })
 
 
