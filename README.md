@@ -5,6 +5,7 @@ MessageMedia Chameleon SMS allows you to have masked communication between two p
 ## 📕 Prerequisites
 1. [Node](https://nodejs.org/en/download/)
 2. [ngrok](https://ngrok.com/)
+3. [Postman](https://www.getpostman.com/apps)
 
 ## 🎬 Get Started
 1. Start ngrok - you can do this opening up the command line and running the command `ngrok http 3000`
