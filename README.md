@@ -24,7 +24,7 @@ Your ngrok url will show up on the command line after you run `ngrok http 3000`.
 
 5. Fire up the command line from the root of this cloned repository and run `npm install` 
 6. Run `npm start` from the same location to start the express server
-7. You should see the following on your command line - `Chameleon is running on 3000!`
+7. You should see the following on your command line - `Chameleon listening on port 3000!`
 8. TBC
 
 ## 😕 Need help?
