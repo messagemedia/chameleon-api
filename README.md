@@ -26,7 +26,14 @@ Your ngrok url will show up on the command line after you run `ngrok http 3000`.
 5. Fire up the command line from the root of this cloned repository and run `npm install` 
 6. Run `npm start` from the same location to start the express server
 7. You should see the following on your command line - `Chameleon listening on port 3000!`
-8. TBC
+8. Click on the following link - https://app.getpostman.com/run-collection/b0a6031eed4b6dd45455
+9. This will import the request into your Postman application
+10. You should see something similar on your app
+![img](http://i68.tinypic.com/24ypmr7.jpg)
+11. Update your authentication details
+12. Update the url with your `[ngrok url]/chameleon`
+13. Update the mobile numbers in the request. You can change the names and the expiry time as well.
+14. Hit send!
 
 ## 😕 Need help?
 Please contact developer support at developers@messagemedia.com or check out the developer portal at [developers.messagemedia.com](https://developers.messagemedia.com/)
