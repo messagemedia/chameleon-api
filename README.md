@@ -8,9 +8,9 @@ MessageMedia Chameleon SMS allows you to have masked communication between two p
 
 ## 🎬 Get Started
 1. Start ngrok - you can do this opening up the command line and running the command `ngrok http 3000`
-[img](http://i64.tinypic.com/fwbih.jpg)
+![img](http://i64.tinypic.com/fwbih.jpg)
 2. A successful execution will show you a screen similar to the one below
-[img](http://i68.tinypic.com/2na8ln8.jpg)
+![img](http://i68.tinypic.com/2na8ln8.jpg)
 3. Clone this repository
 4. Open the .env file and update the environmental variables:
 MM_API_API_KEY=[API Key from MessageMedia]
