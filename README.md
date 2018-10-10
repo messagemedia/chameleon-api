@@ -13,12 +13,12 @@ MessageMedia Chameleon SMS allows you to have masked communication between two p
 ![img](http://i64.tinypic.com/fwbih.jpg)
 3. Clone this repository
 4. Open the cloned repository and create a .env file
-5. Copy and paste the environmental variables below and update them accordingly
-MM_API_API_KEY=[API Key from MessageMedia]<br/>
+5. Copy and paste the environmental variables below and update them accordingly:<br/>
+`MM_API_API_KEY=[API Key from MessageMedia]<br/>
 MM_API_SECRET_KEY=[API Secret Key from MessageMedia]<br/>
 PORT=[Any, we recommend port 3000]<br/>
 CALLBACK_URL=[ngrok url]/incoming<br/>
-NUMBERS=[dedicated numbers, separated by comma.]<br/>
+NUMBERS=[dedicated numbers, separated by comma.]<br/>`
 
 Your ngrok url will show up on the command line after you run `ngrok http 3000`. You can choose any one of the 'Forwarding URLs'. This is what it typically looks like - http://f34bba6f.ngrok.io
 
