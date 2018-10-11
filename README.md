@@ -23,7 +23,7 @@ MessageMedia Chameleon SMS allows you to have masked communication between two p
 
 Your ngrok url will show up on the command line after you run `ngrok http 3000`. You can choose any one of the 'Forwarding URLs'. This is what it typically looks like - http://f34bba6f.ngrok.io
 
-6. Fire up the command line from the root of this cloned repository and run `npm install`
+6. Fire up the command line from the root of this cloned repository and run `npm install` to install all dependencies
 7. Run `npm start` from the same location to start the express server
 8. You should see the following on your command line - `Chameleon listening on port 3000!`
 9. Click on the following link - https://app.getpostman.com/run-collection/b0a6031eed4b6dd45455
@@ -31,7 +31,9 @@ Your ngrok url will show up on the command line after you run `ngrok http 3000`.
 11. You should see something similar on your app
 ![img](http://i68.tinypic.com/24ypmr7.jpg)
 12. Update your authentication details
-13. Update the url with your `[ngrok url]/chameleon`
+![img](http://i65.tinypic.com/2pqm62f.jpg)
+13. Update the url with your `[ngrok url]/chameleon`. Eg: `http://f34bba6f.ngrok.io/chameleon`
+![img](http://i66.tinypic.com/33kdai0.jpg)
 14. Update the mobile numbers in the request. You can change the names and the expiry time as well.
 15. Hit send!
 
