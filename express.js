@@ -33,7 +33,7 @@ app.post('/chameleon', (req, res) => {
 
     console.log("Recipients: ",recipient1,recipient2)
     number_controller.getAvailableLineForNumbers([recipient1.number, recipient2.number], (numbers) => {
-        const number = numbers[0]
+        const number = process.env.LINES
         if(typeof number != 'undefined') {
           const line = number
 
@@ -46,6 +46,8 @@ app.post('/chameleon', (req, res) => {
           messages_controller.createSendMessages(body, function(error, response, context) {
             console.log(response);
           });
+        } else {
+          console.log("You've run out of dedicated numbers.")
         }
     })
   })

@@ -1,4 +1,4 @@
-# MessageMedia Chameleon SMS 
+# MessageMedia Chameleon SMS
 
 MessageMedia Chameleon SMS allows you to have masked communication between two parties using metadata. You will need to set up atleast one dedicated number for your account in order to get this application working as expected. To do so, you can send an email to MessageMedia's support team (support@messagemedia.com).
 
@@ -19,11 +19,11 @@ MessageMedia Chameleon SMS allows you to have masked communication between two p
 `MM_API_SECRET_KEY=[API Secret Key from MessageMedia]`<br/>
 `PORT=[Any, we recommend port 3000]`<br/>
 `CALLBACK_URL=[ngrok url]/incoming`<br/>
-`NUMBERS=[dedicated numbers, separated by comma.]`<br/>
+`LINES=[dedicated number(s), separated by comma.]`<br/>
 
 Your ngrok url will show up on the command line after you run `ngrok http 3000`. You can choose any one of the 'Forwarding URLs'. This is what it typically looks like - http://f34bba6f.ngrok.io
 
-6. Fire up the command line from the root of this cloned repository and run `npm install` 
+6. Fire up the command line from the root of this cloned repository and run `npm install`
 7. Run `npm start` from the same location to start the express server
 8. You should see the following on your command line - `Chameleon listening on port 3000!`
 9. Click on the following link - https://app.getpostman.com/run-collection/b0a6031eed4b6dd45455
