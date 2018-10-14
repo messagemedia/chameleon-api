@@ -37,8 +37,8 @@ app.post('/chameleon', (req, res) => {
         if(typeof number != 'undefined') {
           const line = number
 
-          const initialMessage01 = templates.initialMessage(line, recipient1, recipient2, recipients[0].initial_message, conversation.expiry)
-          const initialMessage02 = templates.initialMessage(line, recipient2, recipient1, recipients[1].initial_message, conversation.expiry)
+          const initialMessage01 = templates.initialMessage(line, recipient2, recipient1, recipients[0].initial_message, conversation.expiry)
+          const initialMessage02 = templates.initialMessage(line, recipient1, recipient2, recipients[1].initial_message, conversation.expiry)
           const messages = [initialMessage01, initialMessage02]
 
           const body = new sdk.SendMessagesRequest({messages:messages})
