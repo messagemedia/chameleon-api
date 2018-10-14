@@ -26,7 +26,8 @@ Your ngrok url will show up on the command line after you run `ngrok http 3000`.
 6. Fire up the command line from the root of this cloned repository and run `npm install` to install all dependencies
 7. Run `npm start` from the same location to start the express server
 8. You should see the following on your command line - `Chameleon listening on port 3000!`
-9. Click on the following button - [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/bbff37b7a3172617f2dd)
+9. Click on the following button - <br/>
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/0e777e179754d5838458)
 10. This will import the request into your Postman application
 11. You should see something similar on your app
 ![img](http://i68.tinypic.com/24ypmr7.jpg)
