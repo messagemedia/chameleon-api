@@ -37,9 +37,9 @@ class MessageTemplateController {
           "destination_number":recipient.number,
           "metadata": {
             "line":line,
-            "name":sender.name,
+            "name":recipient.name,
             "recipient":sender.number,
-            "recipient_name":recipient.name,
+            "recipient_name":sender.name,
             "expiry":expiry,
             "type":"reply"
           },
