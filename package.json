@@ -15,7 +15,7 @@
     "express": "^4.16.3",
     "messagemedia-messages-sdk": "^1.0.3",
     "messagemedia-signingkeys-sdk": "^1.2.0",
-    "moment": "^2.22.2",
+    "moment": "^2.29.4",
     "request": "^2.88.0",
     "uuid": "^3.3.2"
   },
